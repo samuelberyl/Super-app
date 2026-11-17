@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TAPHY SUPER APP 🔥 - Everything in Homabay</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#f0f2f5;color:#111}
+header{background:linear-gradient(135deg,#ff6600,#ffcc00);padding:14px 16px;color:#111;position:sticky;top:0;z-index:20}
+header h1{font-size:24px}
+header p{font-size:13px}
+.search{margin:12px 16px;background:white;border-radius:25px;padding:11px 16px;display:flex;gap:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.search input{border:none;outline:none;flex:1;font-size:15px}
+.welcome{margin:0 16px;background:linear-gradient(135deg,#111,#333);color:white;border-radius:16px;padding:18px;display:flex;justify-content:space-between;align-items:center}
+.welcome h2{font-size:20px;line-height:1.3}
+.welcome h2 span{color:#ffcc00}
+.welcome button{background:#ffcc00;border:none;padding:10px 18px;border-radius:20px;font-weight:bold;cursor:pointer;margin-top:10px}
+.categories{display:flex;gap:10px;overflow-x:auto;padding:14px 16px;scrollbar-width:none}
+.categories::-webkit-scrollbar{display:none}
+.cat{flex-shrink:0;background:white;padding:10px 16px;border-radius:20px;font-weight:bold;font-size:14px;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,0.08);border:2px solid transparent}
+.cat.active{background:#111;color:white;border-color:#ffcc00}
+.section{padding:0 16px 10px}
+.section h3{display:flex;justify-content:space-between;align-items:center;margin:12px 0 10px}
+.section h3 span{color:#ff6600;font-size:13px;cursor:pointer}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{background:white;border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);cursor:pointer}
+.card .img{height:120px;display:flex;align-items:center;justify-content:center;font-size:60px}
+.card .info{padding:10px}
+.card .info b{font-size:14px;display:block;line-height:1.3}
+.card .info small{color:#777;font-size:12px}
+.card .price{color:#00a651;font-weight:bold;margin-top:4px}
+.card button{width:100%;background:#111;color:white;border:none;padding:9px;border-radius:8px;font-weight:bold;cursor:pointer;margin-top:6px}
+.card button:hover{background:#ff6600}
+.list-card{background:white;border-radius:14px;padding:12px;margin-bottom:10px;display:flex;gap:12px;align-items:center;box-shadow:0 2px 5px rgba(0,0,0,0.06);cursor:pointer}
+.list-card .ico{width:55px;height:55px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.list-card b{font-size:14px}
+.list-card p{font-size:12px;color:#777;margin:2px 0}
+.bottom-nav{position:fixed;bottom:0;left:0;width:100%;background:white;border-top:1px solid #ddd;padding:10px;display:flex;justify-content:space-around;font-size:22px;z-index:30;box-shadow:0 -2px 10px rgba(0,0,0,0.1)}
+.bottom-nav div{text-align:center;cursor:pointer;font-size:11px;color:#777}
+.bottom-nav div.active{color:#ff6600;font-weight:bold}
+.bottom-nav div span{display:block;font-size:22px}
+.cart-float{position:fixed;bottom:75px;right:16px;background:#111;color:white;padding:12px 18px;border-radius:30px;font-weight:bold;cursor:pointer;z-index:30;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:99;justify-content:center;align-items:flex-end;padding:0}
+.modalBox{background:white;width:100%;max-width:500px;border-radius:20px 20px 0 0;padding:20px;max-height:85vh;overflow-y:auto}
+.modalBox button{padding:11px 18px;border-radius:10px;border:none;font-weight:bold;cursor:pointer;margin:5px}
+</style>
+</head>
+<body>
+
+<header>
+<h1>🔥 TAPHY SUPER APP</h1>
+<p>📍 Homabay, Kenya • Everything in One App • 12,400 people online</p>
+</header>
+
+<div class="search">🔍 <input type="text" id="searchInput" placeholder="Search food, taxi, shop, news..." oninput="doSearch()"></div>
+
+<div class="welcome">
+<div><h2>Hello, Taphy! 👋<br><span>What do you need today?</span></h2><p style="font-size:13px;color:#ccc;margin-top:4px">Free delivery for orders above 500/-</p><button onclick="openCart()">🛒 View Cart (<span id="cartCount2">0</span>)</button></div>
+<div style="font-size:60px">🏖️</div>
+</div>
+
+<div class="categories" id="cats">
+<div class="cat active" onclick="setCat('All',this)">🏠 All</div>
+<div class="cat" onclick="setCat('Food',this)">🍔 Food</div>
+<div class="cat" onclick="setCat('Shop',this)">🛒 Shop</div>
+<div class="cat" onclick="setCat('Ride',this)">🏍️ Ride</div>
+<div class="cat" onclick="setCat('Game',this)">🎮 Games</div>
+<div class="cat" onclick="setCat('News',this)">📰 News</div>
+</div>
+
+<div class="section">
+<h3>🔥 Trending Today <span onclick="alert('More trending coming!')">See All →</span></h3>
+<div class="grid" id="trendingGrid"></div>
+</div>
+
+<div class="section">
+<h3>🍔 Food - Order Now! <span onclick="setCat('Food',document.querySelectorAll('.cat')[1])">See All →</span></h3>
+<div id="foodList"></div>
+</div>
+
+<div class="section">
+<h3>🏍️ Rides - Homabay Taxi <span onclick="bookRide()">Book Now →</span></h3>
+<div class="list-card" onclick="bookRide()"><div class="ico" style="background:#ffeaa7">🏍️</div><div><b>Boda Boda - Town to Shauri Yako</b><p>⭐ 4.9 • 5 mins away • 100/-</p><p style="color:#00a651;font-weight:bold">Available Now!</p></div><button style="background:#111;color:white;border:none;padding:9px 14px;border-radius:8px;font-weight:bold;cursor:pointer">Book</button></div>
+<div class="list-card" onclick="bookRide()"><div class="ico" style="background:#dfe6e9">🚕</div><div><b>Taxi - Homabay to Kisumu</b><p>⭐ 4.8 • 10 mins away • 1,500/-</p><p style="color:#00a651;font-weight:bold">Comfort + AC</p></div><button style="background:#111;color:white;border:none;padding:9px 14px;border-radius:8px;font-weight:bold;cursor:pointer">Book</button></div>
+</div>
+
+<div class="section">
+<h3>🎮 Play Games <span onclick="alert('More games coming soon!')">See All →</span></h3>
+<div class="grid" id="gamesGrid"></div>
+</div>
+
+<div class="section">
+<h3>📰 Homabay News <span>Live →</span></h3>
+<div id="newsList"></div>
+</div>
+
+<div class="section" style="padding-bottom:90px">
+<h3>💬 What People Say</h3>
+<div class="list-card"><div class="ico" style="background:#fdcb6e">👩</div><div><b>Mary Akinyi ⭐⭐⭐⭐⭐</b><p>"Best app in Homabay! Food came in 15 mins!"</p></div></div>
+<div class="list-card"><div class="ico" style="background:#a29bfe">👨</div><div><b>Brian O ⭐⭐⭐⭐⭐</b><p>"Boda arrived so fast. Taphy App is fire! 🔥"</p></div></div>
+</div>
+
+<div class="cart-float" onclick="openCart()">🛒 Cart: <span id="cartCount">0</span> items • <span id="cartTotal">0</span>/-</div>
+
+<div class="bottom-nav">
+<div class="active"><span>🏠</span>Home</div>
+<div onclick="setCat('Food',document.querySelectorAll('.cat')[1]);window.scrollTo({top:400,behavior:'smooth'})"><span>🍔</span>Food</div>
+<div onclick="openCart()"><span>🛒</span>Cart</div>
+<div onclick="alert('Chat: Hello Taphy! How can we help? 💬')"><span>💬</span>Chat</div>
+<div onclick="alert('Profile: Taphy Samson\nOrders: 12\nPoints: 1,240\nLevel: Gold 🏆')"><span>👤</span>Profile</div>
+</div>
+
+<div class="modal" id="cartModal">
+<div class="modalBox">
+<h2>🛒 Your Cart</h2>
+<div id="cartItems" style="margin:12px 0"></div>
+<p style="font-weight:bold;font-size:18px">Total: <span id="cartTotal2">0</span>/- <span style="color:#00a651;font-size:13px" id="deliveryInfo"></span></p>
+<div style="text-align:center;margin-top:12px">
+<button style="background:#00a651;color:white;width:100%;padding:13px" onclick="checkout()">✅ Checkout - Pay with M-Pesa</button>
+<button style="background:#ddd" onclick="closeCart()">Close</button>
+</div>
+<p id="checkoutResult" style="color:#00a651;font-weight:bold;text-align:center;margin-top:10px"></p>
+</div>
+</div>
+
+<div class="modal" id="rideModal">
+<div class="modalBox" style="text-align:center">
+<h2>🏍️ Ride Booked!</h2>
+<p style="font-size:60px">🏍️💨</p>
+<p style="margin:10px 0;line-height:1.6"><b>Driver: Otieno J</b><br>⭐ 4.9 • Plate: KMD 123A<br>Arriving in 5 mins!<br>From: Homabay Town<br>To: Shauri Yako</p>
+<p style="color:#00a651;font-weight:bold">Fare: 100/- • Pay with M-Pesa</p>
+<button style="background:#111;color:white;width:100%;padding:12px" onclick="closeRide()">OK, Waiting! 👍</button>
+</div>
+</div>
+
+<script>
+let cart=[];
+let allItems=[
+{cat:'Food',title:'Tilapia + Ugali',desc:'Fresh from Lake Victoria 🐟',price:350,emoji:'🐟',bg:'#ffeaa7',rating:'4.9'},
+{cat:'Food',title:'Samosa (3 pcs)',desc:'Crispy & Hot 😋',price:150,emoji:'🥟',bg:'#fdcb6e',rating:'4.8'},
+{cat:'Food',title:'Chips + Chicken',desc:'Best in Homabay 🍗',price:450,emoji:'🍗',bg:'#ff7675',rating:'4.7'},
+{cat:'Food',title:'Pizza Large',desc:'Cheesy & Delicious 🍕',price:800,emoji:'🍕',bg:'#fab1a0',rating:'4.9'},
+{cat:'Shop',title:'Nike Shoes',desc:'Original - Size 42 👟',price:3500,emoji:'👟',bg:'#dfe6e9',rating:'4.8'},
+{cat:'Shop',title:'iPhone Charger',desc:'Fast Charging 🔌',price:800,emoji:'🔌',bg:'#a29bfe',rating:'4.6'},
+{cat:'Shop',title:'T-Shirt - Homabay FC',desc:'Official Jersey ⚽',price:1200,emoji:'👕',bg:'#74b9ff',rating:'5.0'},
+{cat:'Shop',title:'Headphones',desc:'Bass Boost 🎧',price:1500,emoji:'🎧',bg:'#55efc4',rating:'4.9'},
+];
+let games=[
+{title:'Beach Buggy Racing',desc:'Race on Beach 🏖️',emoji:'🏎️',bg:'#ffeaa7'},
+{title:'Taphy Super Game',desc:'Jump & Shoot 🎮',emoji:'🦸‍♂️',bg:'#a29bfe'},
+{title:'Football Manager',desc:'Manage Homabay FC ⚽',emoji:'⚽',bg:'#55efc4'},
+{title:'Taphy Puzzle',desc:'Brain Game 🧩',emoji:'🧩',bg:'#fab1a0'},
+];
+let news=[
+{title:'Homabay FC Wins Cup! 🏆',desc:'Big win yesterday! Fans celebrate in town...',emoji:'🏆',bg:'#ffeaa7',time:'2h ago'},
+{title:'New Road in Homabay Town',desc:'Government starts tarmacking main road...',emoji:'🛣️',bg:'#dfe6e9',time:'5h ago'},
+{title:'Lake Victoria Festival This Weekend',desc:'Music, Food & Culture - Don\'t miss!',emoji:'🎶',bg:'#a29bfe',time:'1d ago'},
+];
+let currentCat='All';
+function render(){
+  let trending = allItems.slice(0,4);
+  let tHtml='';
+  trending.forEach((item,i)=>{
+    tHtml+='<div class="card" onclick="addToCart('+allItems.indexOf(item)+')"><div class="img" style="background:'+item.bg+'">'+item.emoji+'</div><div class="info"><b>'+item.title+'</b><small>⭐ '+item.rating+' • '+item.desc+'</small><div class="price">'+item.price+'/-</div><button>+ Add to Cart</button></div></div>';
+  });
+  document.getElementById('trendingGrid').innerHTML=tHtml;
+
+  let food = allItems.filter(x=>x.cat=='Food');
+  let fHtml='';
+  food.forEach(item=>{
+    let idx=allItems.indexOf(item);
+    fHtml+='<div class="list-card" onclick="addToCart('+idx+')"><div class="ico" style="background:'+item.bg+'">'+item.emoji+'</div><div><b>'+item.title+'</b><p>'+item.desc+' • ⭐ '+item.rating+'</p><p style="color:#00a651;font-weight:bold">'+item.price+'/- • 15 mins delivery</p></div><button style="background:#111;color:white;border:none;padding:8px 12px;border-radius:8px;font-weight:bold;cursor:pointer">Add +</button></div>';
+  });
+  document.getElementById('foodList').innerHTML=fHtml;
+
+  let gHtml='';
+  games.forEach(g=>{
+    gHtml+='<div class="card" onclick="alert(\'Playing '+g.title+'... 🎮 Loading!\')"><div class="img" style="background:'+g.bg+'">'+g.emoji+'</div><div class="info"><b>'+g.title+'</b><small>'+g.desc+'</small><button>▶️ Play Now</button></div></div>';
+  });
+  document.getElementById('gamesGrid').innerHTML=gHtml;
+
+  let nHtml='';
+  news.forEach(n=>{
+    nHtml+='<div class="list-card" onclick="alert(\''+n.title+'\\n\\n'+n.desc+'\\n\\nRead full story on Taphy News!\')"><div class="ico" style="background:'+n.bg+'">'+n.emoji+'</div><div><b>'+n.title+'</b><p>'+n.desc+'</p><p style="color:#ff6600">'+n.time+' • Homabay</p></div></div>';
+  });
+  document.getElementById('newsList').innerHTML=nHtml;
+
+  updateCart();
+}
+function setCat(cat,el){
+  currentCat=cat;
+  document.querySelectorAll('.cat').forEach(c=>c.classList.remove('active'));
+  if(el) el.classList.add('active');
+  if(cat=='All'){ render(); return; }
+  let filtered=allItems.filter(x=>x.cat==cat);
+  let html='';
+  filtered.forEach(item=>{
+    let idx=allItems.indexOf(item);
+    html+='<div class="card" onclick="addToCart('+idx+')"><div class="img" style="background:'+item.bg+'">'+item.emoji+'</div><div class="info"><b>'+item.title+'</b><small>'+item.desc+'</small><div class="price">'+item.price+'/-</div><button>+ Add to Cart</button></div></div>';
+  });
+  document.getElementById('trendingGrid').innerHTML=html;
+  document.querySelector('.section h3').innerHTML=cat+' Items <span>Showing '+filtered.length+'</span>';
+  window.scrollTo({top:350,behavior:'smooth'});
+}
+function doSearch(){
+  let q=document.getElementById('searchInput').value.toLowerCase();
+  if(!q){ render(); return; }
+  let filtered=allItems.filter(x=>x.title.toLowerCase().includes(q)||x.desc.toLowerCase().includes(q));
+  let html='';
+  filtered.forEach(item=>{
+    let idx=allItems.indexOf(item);
+    html+='<div class="card" onclick="addToCart('+idx+')"><div class="img" style="background:'+item.bg+'">'+item.emoji+'</div><div class="info"><b>'+item.title+'</b><small>'+item.desc+'</small><div class="price">'+item.price+'/-</div><button>+ Add</button></div></div>';
+  });
+  if(filtered.length==0) html='<p style="grid-column:span 2;text-align:center;color:#777;padding:20px">No results for "'+q+'"</p>';
+  document.getElementById('trendingGrid').innerHTML=html;
+}
+function addToCart(idx){
+  cart.push(allItems[idx]);
+  updateCart();
+  alert('✅ Added: '+allItems[idx].title+' - '+allItems[idx].price+'/-');
+}
+function updateCart(){
+  let total=cart.reduce((s,x)=>s+x.price,0);
+  document.getElementById('cartCount').innerText=cart.length;
+  document.getElementById('cartCount2').innerText=cart.length;
+  document.getElementById('cartTotal').innerText=total;
+  document.getElementById('cartTotal2').innerText=total;
+  document.getElementById('deliveryInfo').innerText= total>=500 ? ' • FREE Delivery! 🎉' : ' • Delivery 100/-';
+  let html='';
+  if(cart.length==0) html='<p style="color:#777;text-align:center;padding:20px">Cart is empty. Add something! 🛒</p>';
+  cart.forEach((item,i)=>{
+    html+='<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee"><span>'+item.emoji+' '+item.title+'</span><span><b>'+item.price+'/-</b> <button onclick="removeItem('+i+')" style="background:#ff7675;color:white;border:none;padding:4px 8px;border-radius:6px;cursor:pointer;margin-left:6px">✕</button></span></div>';
+  });
+  document.getElementById('cartItems').innerHTML=html;
+}
+function removeItem(i){ cart.splice(i,1); updateCart(); }
+function openCart(){ document.getElementById('cartModal').style.display='flex'; }
+function closeCart(){ document.getElementById('cartModal').style.display='none'; }
+function checkout(){
+  if(cart.length==0){ alert('Cart is empty!'); return; }
+  document.getElementById('checkoutResult').innerText='✅ Order Placed! Pay with M-Pesa: Send to 0712 345 678. Delivery in 20 mins! 🎉';
+  setTimeout(()=>{ cart=[]; updateCart(); closeCart(); document.getElementById('checkoutResult').innerText=''; },2500);
+}
+function bookRide(){ document.getElementById('rideModal').style.display='flex'; }
+function closeRide(){ document.getElementById('rideModal').style.display='none'; }
+render();
+</script>
+</body>
+</html>
